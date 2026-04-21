@@ -1,16 +1,16 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-
+ 
 /* ═══════════════════════════════════════════
    GOOGLE SHEETS CONFIG
 ═══════════════════════════════════════════ */
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbxa9fyRzj_ctpTU3E3EJcFlW0tb2UiIomX5fAUeGpLlPDP0P3VLqZMb-R5KeFRD_OIw/exec";
-
+ 
 async function dbRead() {
   const r = await fetch(SHEET_URL, { method: "GET" });
   if (!r.ok) throw new Error("read error");
   return await r.json();
 }
-
+ 
 async function dbWrite(data) {
   await fetch(SHEET_URL, {
     method: "POST",
@@ -19,9 +19,9 @@ async function dbWrite(data) {
     body: JSON.stringify(data),
   });
 }
-
+ 
 const ADMIN_PIN = "2026";
-
+ 
 /* ═══════════════════════════════════════════
    DATA
 ═══════════════════════════════════════════ */
@@ -135,16 +135,16 @@ const GROUPS = [
       {id:"L6",j:3,day:"27 jun",home:"Croacia",away:"Ghana",venue:"Filadelfia"},
     ]},
 ];
-
+ 
 const ALL_MATCHES = GROUPS.flatMap(g => g.matches);
-
+ 
 /* ═══════════════════════════════════════════
    HELPERS
 ═══════════════════════════════════════════ */
 const COLS = ["#e8634a","#f0b429","#43c78a","#5aaddc","#a78bfa","#f472b6","#34d399","#fb923c","#60a5fa","#4ade80"];
 const acolor = n => { let h=0; for(let c of n) h=(h*31+c.charCodeAt(0))%COLS.length; return COLS[Math.abs(h)]; };
 const ini = n => n.trim().charAt(0).toUpperCase();
-
+ 
 function calcPts(pred, real) {
   if (!real||real.home==null||real.away==null) return null;
   if (!pred||pred.home==null||pred.away==null) return 0;
@@ -154,7 +154,7 @@ function calcPts(pred, real) {
   if (s(ph-pa)===s(rh-ra)) return 1;
   return 0;
 }
-
+ 
 function totals(scores, off) {
   let p=0,ex=0,co=0;
   for (const m of ALL_MATCHES) {
@@ -163,7 +163,7 @@ function totals(scores, off) {
   }
   return {p,ex,co};
 }
-
+ 
 function calcStandings(gid, scores) {
   const g=GROUPS.find(x=>x.id===gid), tbl={};
   g.teams.forEach(t=>{tbl[t]={pt:0,pj:0,pg:0,pe:0,pp:0,gf:0,gc:0};});
@@ -180,7 +180,7 @@ function calcStandings(gid, scores) {
   return Object.entries(tbl).map(([n,s])=>({n,...s,gd:s.gf-s.gc}))
     .sort((a,b)=>b.pt-a.pt||b.gd-a.gd||b.gf-a.gf);
 }
-
+ 
 function calcBracket(scores) {
   const cl={};
   const thirds=[];
@@ -245,7 +245,7 @@ function calcBracket(scores) {
     fin:  [{id:"FIN",day:"19 jul",home:w("S1",sf,scores),away:w("S2",sf,scores),venue:"MetLife · N. Jersey"}],
   };
 }
-
+ 
 /* ═══════════════════════════════════════════
    CSS
 ═══════════════════════════════════════════ */
@@ -259,7 +259,7 @@ input[type=number]{-moz-appearance:textfield;}
 ::-webkit-scrollbar-track{background:#122035;}
 ::-webkit-scrollbar-thumb{background:#2e4068;border-radius:2px;}
 .app{min-height:100vh;display:flex;flex-direction:column;}
-
+ 
 /* HEADER */
 .hdr{background:linear-gradient(160deg,#0a1628,#122035,#162a50);
   border-bottom:2px solid #2e4068;padding:14px 20px;
@@ -284,7 +284,7 @@ input[type=number]{-moz-appearance:textfield;}
   font-size:13px;font-weight:700;}
 .hdr-logout{background:transparent;border:none;font-size:11px;color:#3d526e;
   cursor:pointer;text-decoration:underline;}
-
+ 
 /* TABS */
 .tabs{background:#122035;border-bottom:1px solid #243352;display:flex;
   overflow-x:auto;position:sticky;top:0;z-index:99;
@@ -296,17 +296,17 @@ input[type=number]{-moz-appearance:textfield;}
 .tab:hover{color:#eef2f8;}
 .tab.active{color:#f0b429;border-bottom-color:#f0b429;}
 .tab.adm{color:#e8634a;}.tab.adm.active{border-bottom-color:#e8634a;}
-
+ 
 /* MAIN */
 .main{flex:1;padding:16px 20px;max-width:1600px;margin:0 auto;width:100%;}
-
+ 
 /* NOTICES */
 .notice{background:rgba(240,180,41,.07);border:1px solid rgba(240,180,41,.2);
   border-radius:8px;padding:10px 14px;font-size:12px;color:#f0b429;
   font-weight:600;margin-bottom:16px;}
 .notice.blue{background:rgba(90,173,220,.07);border-color:rgba(90,173,220,.2);color:#5aaddc;}
 .notice.red{background:rgba(224,80,80,.07);border-color:rgba(224,80,80,.2);color:#e05050;}
-
+ 
 /* FILTER */
 .gf-bar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
 .gf-btn{background:transparent;border:1px solid #2e4068;color:#7a91b0;
@@ -314,18 +314,18 @@ input[type=number]{-moz-appearance:textfield;}
   padding:5px 13px;cursor:pointer;border-radius:6px;transition:all .15s;letter-spacing:.5px;}
 .gf-btn:hover{border-color:#f0b429;color:#f0b429;}
 .gf-btn.active{background:#f0b429;border-color:#f0b429;color:#0d1b2a;}
-
+ 
 /* GRIDS */
 .group-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;}
 .ko-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;}
 .admin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;}
-
+ 
 /* CARD */
 .card{background:#162540;border:1px solid #243352;border-radius:12px;overflow:hidden;
   box-shadow:0 2px 12px rgba(0,0,0,.3);transition:border-color .2s,transform .2s;}
 .card:hover{border-color:#2e4068;transform:translateY(-1px);}
 .card.final{border-color:rgba(240,180,41,.5);background:linear-gradient(135deg,#1a2b4a,#162540);}
-
+ 
 /* GROUP HEADER */
 .g-hdr{padding:12px 15px;background:#1a2b4a;border-bottom:1px solid #243352;
   display:flex;align-items:center;gap:11px;}
@@ -340,12 +340,12 @@ input[type=number]{-moz-appearance:textfield;}
 .g-teams{font-size:11px;font-weight:600;color:#eef2f8;white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis;opacity:.85;}
 .g-flag{font-size:24px;}
-
+ 
 /* JORNADA */
 .j-lbl{padding:5px 14px;font-size:9px;font-weight:700;letter-spacing:3px;
   text-transform:uppercase;color:#5aaddc;background:rgba(90,173,220,.07);
   border-bottom:1px solid #243352;}
-
+ 
 /* MATCH ROW */
 .m-row{border-bottom:1px solid rgba(36,51,82,.6);transition:background .15s;}
 .m-row:hover{background:rgba(240,180,41,.03);}
@@ -376,7 +376,7 @@ input[type=number]{-moz-appearance:textfield;}
 .pt-b.co{background:rgba(90,173,220,.12);color:#5aaddc;border:1px solid rgba(90,173,220,.25);}
 .pt-b.wr{background:rgba(224,80,80,.1);color:#e05050;border:1px solid rgba(224,80,80,.2);}
 .pt-b.pe{background:rgba(61,82,110,.15);color:#3d526e;border:1px solid #3d526e;}
-
+ 
 /* STANDINGS */
 .st-wrap{border-top:2px solid #243352;background:rgba(9,18,34,.5);}
 .st-hdr{padding:5px 14px;font-size:9px;font-weight:700;letter-spacing:3px;
@@ -399,7 +399,7 @@ input[type=number]{-moz-appearance:textfield;}
 .st-gd{text-align:center;font-size:10px;color:#7a91b0;}
 .st-pts-v{text-align:center;font-family:'Barlow Condensed',sans-serif;
   font-size:18px;font-weight:800;color:#f0b429;}
-
+ 
 /* KO */
 .ko-sec{margin-bottom:26px;}
 .ko-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;
@@ -414,7 +414,7 @@ input[type=number]{-moz-appearance:textfield;}
 .ko-meta{display:flex;justify-content:space-between;align-items:center;}
 .ko-venue{font-size:9px;color:#3d526e;font-weight:700;}
 .ko-sim{font-size:10px;color:#5aaddc;margin-top:3px;font-weight:600;}
-
+ 
 /* RANKING */
 .rank-hdr{padding:18px 20px;background:#1a2b4a;border-bottom:1px solid #243352;}
 .rank-hdr h2{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;color:#fff;}
@@ -437,7 +437,7 @@ input[type=number]{-moz-appearance:textfield;}
 .rb{border-radius:100px;padding:2px 9px;font-size:11px;font-weight:700;}
 .rb.ex{background:rgba(67,199,138,.12);color:#43c78a;border:1px solid rgba(67,199,138,.25);}
 .rb.co{background:rgba(90,173,220,.1);color:#5aaddc;border:1px solid rgba(90,173,220,.2);}
-
+ 
 /* ADMIN */
 .adm-banner{background:rgba(232,99,74,.08);border:1px solid rgba(232,99,74,.25);
   border-radius:10px;padding:13px 18px;margin-bottom:18px;}
@@ -460,11 +460,11 @@ input[type=number]{-moz-appearance:textfield;}
 .adm-in.set{border-color:rgba(232,99,74,.4);background:rgba(232,99,74,.05);}
 .adm-sep{font-size:12px;color:#3d526e;}
 .adm-day{font-size:9px;color:#3d526e;font-weight:700;flex-shrink:0;}
-
+ 
 /* AVATAR */
 .av{border-radius:50%;display:flex;align-items:center;justify-content:center;
   font-family:'Barlow Condensed',sans-serif;font-weight:900;color:#0d1b2a;flex-shrink:0;}
-
+ 
 /* LOGIN */
 .login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;
   padding:16px;background:linear-gradient(160deg,#0a1628 0%,#0d1b2a 60%,#122035 100%);}
@@ -507,21 +507,21 @@ input[type=number]{-moz-appearance:textfield;}
 .part-name{flex:1;font-size:13px;font-weight:600;}
 .part-pts{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:#f0b429;}
 .part-preds{font-size:11px;color:#7a91b0;}
-
+ 
 /* PIN BOX */
 .pin-info{background:rgba(232,99,74,.08);border:1px solid rgba(232,99,74,.2);
   border-radius:8px;padding:10px 14px;margin-bottom:16px;text-align:left;}
 .pin-info p{font-size:12px;color:#7a91b0;margin-bottom:4px;}
 .pin-info strong{font-family:'Barlow Condensed',sans-serif;font-size:20px;
   color:#e8634a;letter-spacing:3px;}
-
+ 
 /* LOADING */
 .loading{display:flex;align-items:center;justify-content:center;gap:12px;
   min-height:100vh;color:#7a91b0;font-size:14px;}
 .spinner{width:24px;height:24px;border:2px solid #2e4068;border-top-color:#f0b429;
   border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
-
+ 
 /* MOBILE */
 @media(max-width:480px){
   .hdr{padding:10px 14px;gap:10px;}
@@ -540,7 +540,7 @@ input[type=number]{-moz-appearance:textfield;}
   .s-in{width:25px;height:24px;font-size:14px;}
 }
 `;
-
+ 
 /* ═══════════════════════════════════════════
    LOGO OFICIAL FIFA 2026
 ═══════════════════════════════════════════ */
@@ -557,7 +557,7 @@ function Logo({size=64}) {
     />
   );
 }
-
+ 
 /* ═══════════════════════════════════════════
    APP
 ═══════════════════════════════════════════ */
@@ -575,7 +575,7 @@ export default function App() {
   const [lmode,   setLmode]   = useState("user");
   const pollRef = useRef(null);
   const saveRef = useRef(null);
-
+ 
   /* ── DB ── */
   const load = useCallback(async()=>{
     try {
@@ -589,13 +589,13 @@ export default function App() {
       setError("Modo offline — datos guardados localmente");
     } finally { setLoading(false); }
   },[]);
-
+ 
   useEffect(()=>{
     load();
     pollRef.current = setInterval(load, 15000);
     return ()=>clearInterval(pollRef.current);
   },[load]);
-
+ 
   const persist = useCallback((data)=>{
     // Guardar siempre en localStorage como backup
     localStorage.setItem("porra_db", JSON.stringify(data));
@@ -611,7 +611,7 @@ export default function App() {
       } finally { setSaving(false); }
     }, 800);
   },[]);
-
+ 
   /* ── AUTH ── */
   const join = ()=>{
     const n=nameIn.trim(); if(!n) return;
@@ -620,19 +620,19 @@ export default function App() {
     const upd=JSON.parse(JSON.stringify(db||{official:{},participants:{}}));
     if(!upd.participants[n]){upd.participants[n]={scores:{},ts:Date.now()};setDb(upd);persist(upd);}
   };
-
+ 
   const adminLogin=()=>{
     if(pinIn===ADMIN_PIN){
       localStorage.setItem("pu","Admin"); localStorage.setItem("pa","1");
       setUser("Admin"); setIsAdmin(true); setTab("admin");
     } else alert("PIN incorrecto");
   };
-
+ 
   const logout=()=>{
     localStorage.removeItem("pu"); localStorage.removeItem("pa");
     setUser(null); setIsAdmin(false); setNameIn(""); setPinIn(""); setLmode("user");
   };
-
+ 
   /* ── SCORES ── */
   const setPred=(mid,side,val)=>{
     if(!user||isAdmin||!db) return;
@@ -642,7 +642,7 @@ export default function App() {
     upd.participants[user].scores[mid][side]=val===""?null:Math.max(0,parseInt(val)||0);
     setDb(upd); persist(upd);
   };
-
+ 
   const setOff=(mid,side,val)=>{
     if(!isAdmin||!db) return;
     const upd=JSON.parse(JSON.stringify(db));
@@ -650,7 +650,7 @@ export default function App() {
     upd.official[mid][side]=val===""?null:Math.max(0,parseInt(val)||0);
     setDb(upd); persist(upd);
   };
-
+ 
   /* ── DERIVED ── */
   const mysc    = db&&user&&!isAdmin?db.participants?.[user]?.scores||{}:{};
   const off     = db?.official||{};
@@ -660,12 +660,12 @@ export default function App() {
   const predCnt = Object.values(mysc).filter(s=>s.home!=null&&s.away!=null).length;
   const bracket = calcBracket(mysc);
   const visG    = gf==="all"?GROUPS:GROUPS.filter(g=>g.id===gf);
-
+ 
   /* ── COMPONENTS ── */
   function Av({n,sz=28}) {
     return <div className="av" style={{width:sz,height:sz,background:acolor(n),fontSize:sz*.42}}>{ini(n)}</div>;
   }
-
+ 
   function PtBadge({mid}) {
     const r=off[mid],pr=mysc[mid];
     if(!r||r.home==null||r.away==null) return <span className="pt-b pe">?</span>;
@@ -674,7 +674,7 @@ export default function App() {
     if(v===1) return <span className="pt-b co">1</span>;
     return <span className="pt-b wr">0</span>;
   }
-
+ 
   function ScoreCell({mid}) {
     const r=off[mid], sc=mysc[mid]||{home:null,away:null};
     const pl=r&&r.home!=null&&r.away!=null;
@@ -697,7 +697,7 @@ export default function App() {
       </div>
     );
   }
-
+ 
   function MRow({m}) {
     const r=off[m.id]; const pl=r&&r.home!=null&&r.away!=null;
     const hc=pl?(r.home>r.away?"#43c78a":r.home===r.away?"#5aaddc":"#eef2f8"):"#eef2f8";
@@ -722,7 +722,7 @@ export default function App() {
       </div>
     );
   }
-
+ 
   function Standings({gid}) {
     const sc=isAdmin?off:mysc;
     const rows=calcStandings(gid,sc);
@@ -747,7 +747,7 @@ export default function App() {
       </div>
     );
   }
-
+ 
   function GroupCard({g}) {
     return (
       <div className="card">
@@ -769,7 +769,7 @@ export default function App() {
       </div>
     );
   }
-
+ 
   function KOCard({m,isFinal=false}) {
     const r=off[m.id]; const pl=r&&r.home!=null&&r.away!=null;
     const hc=pl?(r.home>r.away?"#43c78a":r.home===r.away?"#5aaddc":"#eef2f8"):"#eef2f8";
@@ -800,7 +800,7 @@ export default function App() {
       </div>
     );
   }
-
+ 
   function KOSec({title,emoji,matches,isFinal=false}) {
     const done=matches.filter(m=>{const o=off[m.id];return o&&o.home!=null&&o.away!=null;}).length;
     return (
@@ -816,13 +816,13 @@ export default function App() {
       </div>
     );
   }
-
+ 
   /* ── LOADING ── */
   if(loading) return (
     <><style>{css}</style>
     <div className="loading"><div className="spinner"/>Cargando porra…</div></>
   );
-
+ 
   /* ── LOGIN ── */
   if(!user) return (
     <><style>{css}</style>
@@ -893,12 +893,12 @@ export default function App() {
       </div>
     </div></>
   );
-
+ 
   /* ── APP PRINCIPAL ── */
   return (
     <><style>{css}</style>
     <div className="app">
-
+ 
       {/* HEADER */}
       <div className="hdr">
         <div className="hdr-logo"><Logo size={58}/></div>
@@ -916,7 +916,7 @@ export default function App() {
           <button className="hdr-logout" onClick={logout}>Cerrar sesión</button>
         </div>
       </div>
-
+ 
       {/* TABS */}
       <div className="tabs">
         {!isAdmin&&<button className={`tab${tab==="grupos"?" active":""}`} onClick={()=>setTab("grupos")}>📋 Grupos</button>}
@@ -924,10 +924,10 @@ export default function App() {
         <button className={`tab${tab==="ranking"?" active":""}`} onClick={()=>setTab("ranking")}>🏆 Ranking</button>
         {isAdmin&&<button className={`tab adm${tab==="admin"?" active":""}`} onClick={()=>setTab("admin")}>⚙️ Resultados</button>}
       </div>
-
+ 
       <div className="main">
         {error&&<div className="notice red">⚠️ {error}</div>}
-
+ 
         {/* GRUPOS */}
         {tab==="grupos"&&(
           <>
@@ -946,7 +946,7 @@ export default function App() {
             </div>
           </>
         )}
-
+ 
         {/* BRACKET */}
         {tab==="bracket"&&(
           <>
@@ -961,7 +961,7 @@ export default function App() {
             <KOSec title="FINAL"            emoji="🏆" matches={bracket.fin} isFinal/>
           </>
         )}
-
+ 
         {/* RANKING */}
         {tab==="ranking"&&(
           <div className="card" style={{maxWidth:720}}>
@@ -997,7 +997,7 @@ export default function App() {
               })}
           </div>
         )}
-
+ 
         {/* ADMIN */}
         {tab==="admin"&&isAdmin&&(
           <div style={{maxWidth:880}}>
